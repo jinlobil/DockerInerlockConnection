@@ -9,16 +9,28 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ContainerService {
     private final DockerService dockerService;
+    private final DockerCacheDataService dockerCacheDataService = DockerCacheDataService.getDockerCacheDataService();
     private final DockerCommandUtil dockerCommandUtil = new DockerCommandUtil();
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public DockerResponseDto getContainerList(){
+        Object containerCacheData= this.dockerCacheDataService.getContainerCacheData();
+        if (containerCacheData == null){
+            return new DockerResponseDto(false,"Container inquiry failed",null);
+        }
+        return new DockerResponseDto(true,"Container inquiry completed",containerCacheData);
+    }
+
     public DockerResponseDto getContainerInspect(String containerId){
         if (!dockerService.idValidationCheck(containerId)) {
             return new DockerResponseDto(false, "ContainerId is invalid", null);
@@ -127,5 +139,15 @@ public class ContainerService {
             }
         }
         return sb;
+    }
+
+    public List<String> getContainerIdList() {
+        CommandExecuteResponse result = dockerCommandUtil.execute("docker ps -a | awk '{ print $1 }'");
+        if (result.isSuccess()) {
+            String[] array= result.getData().replace(")","").replace("CONTAINER","").trim().split("\\n");
+            return Arrays.stream(array)
+                    .collect(Collectors.toList());
+        }
+        return null;
     }
 }

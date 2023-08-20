@@ -15,9 +15,12 @@ public class DockerInterlockConnectionApplication {
         DockerController dockerController = new DockerController();
         boolean auth = dockerController.auth();
         if (auth){
+            log.info("Authentication completed. Starting... docker_version_auth = {}", true);
             // 여기서 수집기 돌려야 함
         }else {
             //docker 인증 실패
+            log.error("Authentication failed. Exiting... docker_version_auth = {}", false);
+            System.exit(1); // 프로세스 종료
         }
     }
 
