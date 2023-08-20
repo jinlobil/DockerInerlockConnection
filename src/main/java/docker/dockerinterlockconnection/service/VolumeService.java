@@ -23,11 +23,11 @@ public class VolumeService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public DockerResponseDto getVolumeList(){
-        Object containerCacheData= this.dockerCacheDataService.getContainerCacheData();
-        if (containerCacheData == null){
+        Object volumeCacheData= this.dockerCacheDataService.getVolumeCacheData();
+        if (volumeCacheData == null){
             return new DockerResponseDto(false,"Volume inquiry failed",null);
         }
-        return new DockerResponseDto(true,"Volume inquiry completed",containerCacheData);
+        return new DockerResponseDto(true,"Volume inquiry completed",volumeCacheData);
     }
 
     public DockerResponseDto getVolumeInspect(String volumeId){
