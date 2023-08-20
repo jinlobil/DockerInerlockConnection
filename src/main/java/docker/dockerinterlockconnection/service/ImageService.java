@@ -51,6 +51,33 @@ public class ImageService {
         return new DockerResponseDto(false, "Image inquiry failed", null);
     }
 
-    
+    public DockerResponseDto localImagePull(ImageRequestDto imageData) {
+        if (imageData == null || imageData.getImageName() == null) {
+            return new DockerResponseDto(false, "ImageName is null", null);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("docker image pull ").append(imageData.getImageName());
+        if (imageData.getImageVersion() != null) {
+            sb.append(":").append(imageData.getImageVersion());
+        }
+        CommandExecuteResponse response = dockerCommandUtil.execute(sb.toString());
+        if (response.isSuccess()){
+            return new DockerResponseDto(true,"Image pull completed",response.getData());
+        }
+        return new DockerResponseDto(false, "Image pull failed", null);
+    }
+
+    public DockerResponseDto deleteImage(String imageId) {
+        if (imageId == null) {
+            return new DockerResponseDto(false, "ImageId is null", null);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("docker image rm ").append(imageId);
+        CommandExecuteResponse response = dockerCommandUtil.execute(sb.toString());
+        if (response.isSuccess()){
+            return new DockerResponseDto(true,"Image deleted completed",response.getData());
+        }
+        return new DockerResponseDto(false, "Image deleted failed", null);
+    }
 
 }
