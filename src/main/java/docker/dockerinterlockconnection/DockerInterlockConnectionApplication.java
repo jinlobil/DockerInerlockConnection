@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 @Slf4j
 public class DockerInterlockConnectionApplication {
 
@@ -14,13 +16,12 @@ public class DockerInterlockConnectionApplication {
         SpringApplication.run(DockerInterlockConnectionApplication.class, args);
         DockerController dockerController = new DockerController();
         boolean auth = dockerController.auth();
-        if (auth){
+        if (auth) {
             log.info("Authentication completed. Starting... docker_version_auth = {}", true);
-            // 여기서 수집기 돌려야 함
-        }else {
+        } else {
             //docker 인증 실패
             log.error("Authentication failed. Exiting... docker_version_auth = {}", false);
-            System.exit(1); // 프로세스 종료
+//            System.exit(1); // 프로세스 종료
         }
     }
 

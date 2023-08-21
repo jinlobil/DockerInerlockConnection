@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'docker'
-version = '0.0.1-SNAPSHOT'
+version = 'docker_Interlock'
 
 java {
     sourceCompatibility = '1.8'
@@ -36,6 +36,8 @@ dependencies {
     //Jackson
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.4'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
