@@ -1,7 +1,7 @@
 package docker.dockerinterlockconnection.controller;
 
-import docker.dockerinterlockconnection.dto.DockerResponseDto;
-import docker.dockerinterlockconnection.dto.VolumeRequestDto;
+import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
+import docker.dockerinterlockconnection.dto.request.VolumeRequestDto;
 import docker.dockerinterlockconnection.service.VolumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

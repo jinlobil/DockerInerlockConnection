@@ -1,4 +1,4 @@
-package docker.dockerinterlockconnection.dto;
+package docker.dockerinterlockconnection.dto.request;
 
 import lombok.Data;
 

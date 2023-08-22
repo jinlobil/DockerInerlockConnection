@@ -3,9 +3,9 @@ package docker.dockerinterlockconnection.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import docker.dockerinterlockconnection.dto.CommandExecuteResponse;
-import docker.dockerinterlockconnection.dto.DockerResponseDto;
-import docker.dockerinterlockconnection.dto.SystemResponseDto;
+import docker.dockerinterlockconnection.dto.response.CommandExecuteResponse;
+import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
+import docker.dockerinterlockconnection.dto.SystemDto;
 import docker.dockerinterlockconnection.util.DockerCommandUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class SystemService {
         CommandExecuteResponse response = dockerCommandUtil.execute("docker system df -v --format json");
         if (response.isSuccess()){
             try {
-                return new DockerResponseDto(true,"System inquiry completed", this.objectMapper.readValue(response.getData(), SystemResponseDto.class));
+                return new DockerResponseDto(true,"System inquiry completed", this.objectMapper.readValue(response.getData(), SystemDto.class));
             } catch (JsonProcessingException e) {
                 log.error("SystemService_getSystemInfo Json Parsing Error {}", e);
             }

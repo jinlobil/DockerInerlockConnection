@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ImageResponseDto {
+public class ImageDto {
     @JsonProperty("Containers")
     private String usedContainerCount;
     @JsonProperty("CreatedAt")

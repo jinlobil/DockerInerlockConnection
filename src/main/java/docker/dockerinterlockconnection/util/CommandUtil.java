@@ -1,6 +1,6 @@
 package docker.dockerinterlockconnection.util;
 
-import docker.dockerinterlockconnection.dto.CommandExecuteResponse;
+import docker.dockerinterlockconnection.dto.response.CommandExecuteResponse;
 import lombok.SneakyThrows;
 
 import java.io.ByteArrayOutputStream;

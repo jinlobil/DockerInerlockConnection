@@ -1,5 +1,6 @@
-package docker.dockerinterlockconnection.dto;
+package docker.dockerinterlockconnection.dto.request;
 
+import docker.dockerinterlockconnection.dto.MountDto;
 import lombok.Data;
 
 import java.util.List;

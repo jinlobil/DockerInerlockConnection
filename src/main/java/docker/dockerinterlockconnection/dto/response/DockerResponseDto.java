@@ -1,4 +1,4 @@
-package docker.dockerinterlockconnection.dto;
+package docker.dockerinterlockconnection.dto.response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;

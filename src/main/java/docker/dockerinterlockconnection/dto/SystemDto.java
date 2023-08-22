@@ -6,11 +6,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SystemResponseDto {
+public class SystemDto {
     @JsonProperty("Images")
-    private List<ImageResponseDto> imageDtoList;
+    private List<ImageDto> imageDtoList;
     @JsonProperty("Containers")
-    private List<ContainerResponseDto> containerDtoList;
+    private List<ContainerDto> containerDtoList;
     @JsonProperty("Volumes")
-    private List<VolumeResponseDto> volumeDtoList;
+    private List<VolumeDto> volumeDtoList;
 }

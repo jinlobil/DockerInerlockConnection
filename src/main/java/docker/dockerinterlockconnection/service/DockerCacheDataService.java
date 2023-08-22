@@ -1,8 +1,9 @@
 package docker.dockerinterlockconnection.service;
 
-import docker.dockerinterlockconnection.dto.ContainerResponseDto;
-import docker.dockerinterlockconnection.dto.ImageResponseDto;
-import docker.dockerinterlockconnection.dto.VolumeResponseDto;
+import docker.dockerinterlockconnection.dto.*;
+import docker.dockerinterlockconnection.dto.response.ContainerResponseDto;
+import docker.dockerinterlockconnection.dto.response.ImageResponseDto;
+import docker.dockerinterlockconnection.dto.response.VolumeResponseDto;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class DockerCacheDataService {
         this.volumeCacheData = cacheData;
     }
     public Object getImageCacheData(){
-        return this.volumeCacheData;
+        return this.imageCacheData;
     }
     public void setImageCacheData(List<ImageResponseDto> cacheData) {
         this.imageCacheData = cacheData;

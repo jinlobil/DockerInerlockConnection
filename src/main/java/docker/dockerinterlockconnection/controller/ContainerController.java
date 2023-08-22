@@ -1,9 +1,7 @@
 package docker.dockerinterlockconnection.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import docker.dockerinterlockconnection.dto.CommandExecuteResponse;
-import docker.dockerinterlockconnection.dto.ContainerRequestDto;
-import docker.dockerinterlockconnection.dto.DockerResponseDto;
+import docker.dockerinterlockconnection.dto.request.ContainerRequestDto;
+import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
 import docker.dockerinterlockconnection.service.ContainerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import docker.dockerinterlockconnection.dto.*;
+import docker.dockerinterlockconnection.dto.request.ImageRequestDto;
+import docker.dockerinterlockconnection.dto.response.CommandExecuteResponse;
+import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
 import docker.dockerinterlockconnection.util.DockerCommandUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +24,7 @@ public class ImageService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public DockerResponseDto getLocalImageList(){
-        Object ImageCacheData= this.dockerCacheDataService.getContainerCacheData();
+        Object ImageCacheData= this.dockerCacheDataService.getImageCacheData();
         if (ImageCacheData == null){
             return new DockerResponseDto(false,"Image inquiry failed",null);
         }

@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VolumeResponseDto {
+public class VolumeDto {
     @JsonProperty("Driver")
     private String driver;
     @JsonProperty("Labels")
