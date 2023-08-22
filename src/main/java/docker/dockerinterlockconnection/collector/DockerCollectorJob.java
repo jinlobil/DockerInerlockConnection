@@ -26,7 +26,7 @@ public class DockerCollectorJob {
 
     @Async("threadPoolTaskExecutor")
     //fixedDelay는 해당 작업이 끝난 시점부터 시간을 세고, fixedRate는 해당 작업의 시작 시점부터 시간을 세기 때문에 fixedDelay는 수집이 딜레이 될 가능성이 높음
-    @Scheduled(initialDelay = 1000, fixedRate = 10000) // 5초마다 실행
+    @Scheduled(initialDelay = 1000, fixedRate = 10000) // 10초마다 실행
     public void collect() {
         log.info("DockerCollectorJob_collect START on thread: {}", Thread.currentThread().getName());
         DockerResponseDto response = systemService.getSystemInfo();
