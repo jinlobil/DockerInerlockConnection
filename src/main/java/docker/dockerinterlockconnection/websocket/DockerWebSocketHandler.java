@@ -1,5 +1,8 @@
 package docker.dockerinterlockconnection.websocket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import docker.dockerinterlockconnection.dto.response.DockerWebSocketResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -17,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class DockerWebSocketHandler extends TextWebSocketHandler {
     protected final Map<String, WebSocketSession> webSocketSessions = new ConcurrentHashMap<>();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
@@ -39,7 +43,23 @@ public class DockerWebSocketHandler extends TextWebSocketHandler {
         log.debug("Client got a message, ID: {}, Payload: {}", session.getId(), message.getPayload());
     }
 
-    protected void broadcast(String packet) {
+    public void broadcast(boolean isSuccess, String massage, Object data, DockerWebSocketResponse.RequestType requestType, DockerWebSocketResponse.DataType dataType) {
+        DockerWebSocketResponse webSocketResponse = new DockerWebSocketResponse();
+        webSocketResponse.setSuccess(isSuccess);
+        webSocketResponse.setRequestType(requestType);
+        webSocketResponse.setDataType(dataType);
+        if (massage != null) {
+            webSocketResponse.setMessage(massage);
+        }
+        if (data != null) {
+            webSocketResponse.setData(data);
+        }
+        String packet = null;
+        try {
+            packet = this.mapper.writeValueAsString(webSocketResponse);
+        } catch (JsonProcessingException e) {
+            log.error("DockerWebSocketHandler_Broadcast Header Parsing Fail, Header Data : {}", webSocketResponse);
+        }
         TextMessage message = new TextMessage(packet);
         log.info("broadcast(): Session size is {}", this.webSocketSessions.size());
         if (this.webSocketSessions.size() > 0) {

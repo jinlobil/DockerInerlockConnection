@@ -24,7 +24,7 @@ public class ContainerController {
         return containerService.getContainerInspect(containerId);
     }
     @PostMapping ("")
-    public DockerResponseDto createContainer(ContainerRequestDto containerData){
+    public DockerResponseDto createContainer(@RequestBody ContainerRequestDto containerData){
         return containerService.createContainer(containerData);
     }
     @DeleteMapping ("/{containerId}")

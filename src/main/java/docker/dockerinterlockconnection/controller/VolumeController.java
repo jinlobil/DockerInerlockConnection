@@ -2,6 +2,8 @@ package docker.dockerinterlockconnection.controller;
 
 import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
 import docker.dockerinterlockconnection.dto.request.VolumeRequestDto;
+import docker.dockerinterlockconnection.dto.response.DockerWebSocketResponse;
+import docker.dockerinterlockconnection.service.DockerService;
 import docker.dockerinterlockconnection.service.VolumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class VolumeController {
     private final VolumeService volumeService;
+    private final DockerService dockerService;
     @GetMapping("")
     public DockerResponseDto getVolumeList(){
         return volumeService.getVolumeList();
@@ -22,7 +25,7 @@ public class VolumeController {
         return volumeService.getVolumeInspect(volumeId);
     }
     @PostMapping("")
-    public DockerResponseDto createVolume(VolumeRequestDto volumeRequestDto){
+    public DockerResponseDto createVolume(@RequestBody VolumeRequestDto volumeRequestDto){
         return volumeService.createVolume(volumeRequestDto.getVolumeId());
     }
     @DeleteMapping("/{volumeId}")

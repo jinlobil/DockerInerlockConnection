@@ -121,8 +121,8 @@ public class DockerCollectorJob {
         }
     }
 
-    @Async("threadPoolTaskExecutor")
-    public void triggerCollect() {
+//    @Async("threadPoolTaskExecutor")
+    public  void triggerCollect() {
         collect(); // 특정 이벤트 발생시 임의 메소드 호출
     }
 

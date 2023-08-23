@@ -22,7 +22,7 @@ public class ImageController {
         return imageService.getLocalImageInspect(imageId);
     }
     @PostMapping("")
-    public DockerResponseDto localImagePull(ImageRequestDto imageRequestDto){
+    public DockerResponseDto localImagePull(@RequestBody ImageRequestDto imageRequestDto){
         return imageService.localImagePull(imageRequestDto);
     }
     @DeleteMapping("/{imageId}")
