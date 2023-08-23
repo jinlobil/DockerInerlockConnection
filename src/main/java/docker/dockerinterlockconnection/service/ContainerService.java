@@ -3,10 +3,12 @@ package docker.dockerinterlockconnection.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import docker.dockerinterlockconnection.collector.DockerCollectorJob;
 import docker.dockerinterlockconnection.dto.*;
 import docker.dockerinterlockconnection.dto.request.ContainerRequestDto;
 import docker.dockerinterlockconnection.dto.response.CommandExecuteResponse;
 import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
+import docker.dockerinterlockconnection.dto.response.DockerWebSocketResponse;
 import docker.dockerinterlockconnection.util.DockerCommandUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class ContainerService {
     private final DockerService dockerService;
     private final DockerCacheDataService dockerCacheDataService = DockerCacheDataService.getDockerCacheDataService();
+    private final DockerCollectorJob dockerCollectorJob;
     private final DockerCommandUtil dockerCommandUtil = new DockerCommandUtil();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -61,33 +64,49 @@ public class ContainerService {
 
     public DockerResponseDto createContainer(ContainerRequestDto containerData){
         if (containerData.getContainerName() == null){
+            dockerService.notifyAlarm(false, "ContainerName is null", DockerWebSocketResponse.DataType.CONTAINER);
             return new DockerResponseDto(false, "ContainerName is null", null);
         }
         if (containerData.getImageId() == null) {
+            dockerService.notifyAlarm(false, "ImageId is null", DockerWebSocketResponse.DataType.CONTAINER);
             return new DockerResponseDto(false, "ImageId is null", null);
         }
         if (!dockerService.idValidationCheck(containerData.getImageId())) {
+            dockerService.notifyAlarm(false, "ImageId is invalid", DockerWebSocketResponse.DataType.CONTAINER);
             return new DockerResponseDto(false, "ImageId is invalid", null);
         }
+
         CommandExecuteResponse response = dockerCommandUtil.execute(createContainerCmd(containerData).toString());
+        DockerResponseDto dockerResponseDto = null;
         if (!response.isSuccess()) {
-            return new DockerResponseDto(false, response.getData(), null);
+            dockerResponseDto = new DockerResponseDto(false, response.getData(), null);
+        }else {
+            dockerCollectorJob.triggerCollect();
+            dockerResponseDto = new DockerResponseDto(true, "Container created completed", response.getData());
         }
-        return new DockerResponseDto(true, "Container created completed", response.getData());
+        dockerService.notifyTotal(dockerResponseDto, DockerWebSocketResponse.DataType.CONTAINER);
+        return dockerResponseDto;
     }
 
     public DockerResponseDto deleteContainer(String containerId) {
         if (!dockerService.idValidationCheck(containerId)) {
+            dockerService.notifyAlarm(false, "ContainerId is invalid", DockerWebSocketResponse.DataType.CONTAINER);
             return new DockerResponseDto(false, "ContainerId is invalid", null);
         }
+
         CommandExecuteResponse response = dockerCommandUtil.execute("docker container rm -f " + containerId);
+        DockerResponseDto dockerResponseDto = null;
         if (!response.isSuccess()) {
-            return new DockerResponseDto(false, response.getData(), null);
+            dockerResponseDto = new DockerResponseDto(false, response.getData(), null);
+        }else {
+            dockerCollectorJob.triggerCollect();
+            dockerResponseDto = new DockerResponseDto(true, "Container deleted completed", response.getData());
         }
-        return new DockerResponseDto(true, "Container deleted completed", response.getData());
+        dockerService.notifyTotal(dockerResponseDto, DockerWebSocketResponse.DataType.CONTAINER);
+        return dockerResponseDto;
     }
 
-    public StringBuilder createContainerCmd(ContainerRequestDto containerData){
+    private StringBuilder createContainerCmd(ContainerRequestDto containerData){
         StringBuilder sb = new StringBuilder();
         sb.append("docker container run -d");
         sb.append(" ").append("--name").append(" ").append(containerData.getContainerName());

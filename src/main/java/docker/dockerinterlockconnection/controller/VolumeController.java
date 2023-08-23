@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class VolumeController {
     private final VolumeService volumeService;
-    private final DockerService dockerService;
     @GetMapping("")
     public DockerResponseDto getVolumeList(){
         return volumeService.getVolumeList();
