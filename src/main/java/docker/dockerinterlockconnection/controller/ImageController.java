@@ -13,20 +13,29 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageService imageService;
-    @GetMapping("")
+    @GetMapping("/local")
     public DockerResponseDto getImageList(){
-        return imageService.getLocalImageList();
+        return this.imageService.getLocalImageList();
     }
-    @GetMapping("/{imageId}")
+    @GetMapping("/local/{imageId}")
     public DockerResponseDto getContainerInspect(@PathVariable(value = "imageId") String imageId){
-        return imageService.getLocalImageInspect(imageId);
+        return this.imageService.getLocalImageInspect(imageId);
     }
-    @PostMapping("")
+    @PostMapping("/local")
     public DockerResponseDto localImagePull(@RequestBody ImageRequestDto imageRequestDto){
-        return imageService.localImagePull(imageRequestDto);
+        return this.imageService.localImagePull(imageRequestDto);
     }
-    @DeleteMapping("/{imageId}")
+    @DeleteMapping("/local/{imageId}")
     public DockerResponseDto deleteImage(@PathVariable(value = "imageId") String imageId){
-        return imageService.deleteImage(imageId);
+        return this.imageService.deleteImage(imageId);
+    }
+
+    @GetMapping("/hub/search/{search-word}")
+    private DockerResponseDto dockerHubImageSearch(@PathVariable(value = "search-word") String searchWord){
+        return this.imageService.dockerHubImageSearch(searchWord);
+    }
+    @PostMapping("/hub/upload")
+    public DockerResponseDto dockerHubImageUpload(@RequestBody ImageRequestDto imageRequestDto){
+        return this.imageService.dockerHubImageUpload(imageRequestDto);
     }
 }

@@ -1,11 +1,14 @@
 package docker.dockerinterlockconnection.service;
 
 import docker.dockerinterlockconnection.collector.DockerCollectorJob;
+import docker.dockerinterlockconnection.dto.BasicAuthDto;
 import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
 import docker.dockerinterlockconnection.dto.response.DockerWebSocketResponse;
 import docker.dockerinterlockconnection.websocket.DockerWebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -47,5 +50,23 @@ public class DockerService {
             notifyAlarm(false, response.getMessage(), dataType);
         }
 
+    }
+    public BasicAuthDto basicAuthDecode(String authorizationData) {
+        if (authorizationData != null && authorizationData.startsWith("Basic ")) {
+            // "Basic" 다음에 오는 부분이 베이직 인증 정보의 base64 인코딩된 문자열
+            String base64Credentials = authorizationData.substring("Basic ".length()).trim();
+            // Base64 디코딩
+            String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+            String[] parts = credentials.split(":");
+
+            String username = null;
+            String password = null;
+            if (parts.length == 2) {
+                username = parts[0];
+                password = parts[1];
+                return new BasicAuthDto(true, username, password);
+            }
+        }
+        return new BasicAuthDto(false, null, null);
     }
 }

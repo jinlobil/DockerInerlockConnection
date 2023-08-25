@@ -16,7 +16,6 @@ public class ContainerController {
 
     @GetMapping("")
     public DockerResponseDto getContainerList(){
-        log.info("잘 들어 오나요?");
        return containerService.getContainerList();
     }
     @GetMapping("/{containerId}")
