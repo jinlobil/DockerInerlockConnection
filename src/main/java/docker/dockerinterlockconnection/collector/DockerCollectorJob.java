@@ -1,11 +1,9 @@
 package docker.dockerinterlockconnection.collector;
 
 import docker.dockerinterlockconnection.dto.*;
-import docker.dockerinterlockconnection.dto.response.ContainerResponseDto;
-import docker.dockerinterlockconnection.dto.response.DockerResponseDto;
-import docker.dockerinterlockconnection.dto.response.ImageResponseDto;
-import docker.dockerinterlockconnection.dto.response.VolumeResponseDto;
+import docker.dockerinterlockconnection.dto.response.*;
 import docker.dockerinterlockconnection.service.DockerCacheDataService;
+import docker.dockerinterlockconnection.service.DockerService;
 import docker.dockerinterlockconnection.service.SystemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DockerCollectorJob {
     private final DockerCacheDataService dockerCacheDataService = DockerCacheDataService.getDockerCacheDataService();
+    private final DockerService dockerService;
     private final SystemService systemService;
 
 
@@ -29,7 +28,8 @@ public class DockerCollectorJob {
     @Scheduled(initialDelay = 1000, fixedRate = 10000) // 10초마다 실행
     public void collect() {
         log.info("DockerCollectorJob_collect START on thread: {}", Thread.currentThread().getName());
-        DockerResponseDto response = systemService.getSystemInfo();
+        DockerResponseDto response = systemService.getSystemDataUsing();
+        DockerResponseDto infoResponse = systemService.getSystemInfo();
         if (response.isSuccess()) {
             SystemDto systemData = (SystemDto) response.getData();
 
@@ -119,10 +119,72 @@ public class DockerCollectorJob {
             }
             dockerCacheDataService.setVolumeCacheData(volumeResponseList);
         }
+
+        // System Info
+        if (infoResponse.isSuccess()) {
+
+            SystemInfoDto infoRawData = null;
+            SystemInfoResponseDto infoResponseData = new SystemInfoResponseDto();
+            if (infoResponse.getData() != null) {
+                infoRawData = (SystemInfoDto) infoResponse.getData();
+            }
+            if (infoRawData.getDockerId() != null) {
+                infoResponseData.setDockerId(infoRawData.getDockerId());
+            }
+            if (infoRawData.getContainerCount() != null) {
+                infoResponseData.setContainerCount(infoRawData.getContainerCount());
+            }
+            if (infoRawData.getImageCount() != null) {
+                infoResponseData.setImageCount(infoRawData.getImageCount());
+            }
+            if (infoRawData.getFileDescriptorCount() != null) {
+                infoResponseData.setFileDescriptorCount(infoRawData.getFileDescriptorCount());
+            }
+            if (infoRawData.getMemTotal() != null) {
+                infoResponseData.setMemTotal(infoRawData.getMemTotal());
+            }
+            infoResponseData.setMemLimit(infoRawData.isMemLimit());
+            infoResponseData.setPidLimit(infoRawData.isPidLimit());
+            infoResponseData.setCpuPeriodLimit(infoRawData.isCpuPeriodLimit());
+            infoResponseData.setCpuQuotaLimit(infoRawData.isCpuQuotaLimit());
+            infoResponseData.setDebugEnable(infoRawData.isDebugEnable());
+            infoResponseData.setOutOfMemoryKill(infoRawData.isOutOfMemoryKill());
+
+            if (infoRawData.getKernelVersion() != null) {
+                infoResponseData.setKernelVersion(infoRawData.getKernelVersion());
+            }
+            if (infoRawData.getOperatingSystem() != null) {
+                infoResponseData.setOperatingSystem(infoRawData.getOperatingSystem());
+            }
+            if (infoRawData.getOsVersion() != null) {
+                infoResponseData.setOsVersion(infoRawData.getOsVersion());
+            }
+            if (infoRawData.getOsType() != null) {
+                infoResponseData.setOsType(infoRawData.getOsType());
+            }
+            if (infoRawData.getArchitecture() != null) {
+                infoResponseData.setArchitecture(infoRawData.getArchitecture());
+            }
+            if (infoRawData.getDockerRootDir() != null) {
+                infoResponseData.setDockerRootDir(infoRawData.getDockerRootDir());
+            }
+            if (infoRawData.getServerVersion() != null) {
+                infoResponseData.setServerVersion(infoRawData.getServerVersion());
+            }
+
+            SystemInfoResponseDto beforeSystemInfo = (SystemInfoResponseDto) dockerCacheDataService.getSystemInfoCacheData();
+            dockerCacheDataService.setSystemInfoCacheData(infoResponseData);
+            if (beforeSystemInfo != null) {
+                boolean difference = SystemInfoResponseDto.isDifferent(beforeSystemInfo, infoResponseData);
+                if (difference) {
+                    this.dockerService.notifyTotal(new DockerResponseDto(true, "System information fluctuation", null), DockerWebSocketResponse.DataType.SYSTEM);
+                }
+            }
+        }
     }
 
-//    @Async("threadPoolTaskExecutor")
-    public  void triggerCollect() {
+    //    @Async("threadPoolTaskExecutor")
+    public void triggerCollect() {
         collect(); // 특정 이벤트 발생시 임의 메소드 호출
     }
 

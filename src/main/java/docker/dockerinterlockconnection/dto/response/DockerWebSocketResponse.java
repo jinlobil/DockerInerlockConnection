@@ -30,7 +30,8 @@ public class DockerWebSocketResponse {
 
         CONTAINER(0),
         IMAGE(1),
-        VOLUME(2);
+        VOLUME(2),
+        SYSTEM(3);
 
         @JsonValue
         final int num;

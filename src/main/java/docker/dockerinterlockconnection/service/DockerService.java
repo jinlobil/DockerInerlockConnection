@@ -39,6 +39,8 @@ public class DockerService {
                 break;
                 case CONTAINER:cacheData= dockerCacheDataService.getContainerCacheData();
                 break;
+                case SYSTEM:cacheData= dockerCacheDataService.getSystemInfoCacheData();
+                break;
             }
             notifyAlarm(true, response.getMessage(), dataType);
             notifyInfo(true,
