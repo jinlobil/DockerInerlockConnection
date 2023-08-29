@@ -19,10 +19,6 @@ public class VolumeController {
     public DockerResponseDto getVolumeList(){
         return volumeService.getVolumeList();
     }
-    @GetMapping("/{volumeId}")
-    public DockerResponseDto getVolumeInspect(@PathVariable(value = "volumeId") String volumeId){
-        return volumeService.getVolumeInspect(volumeId);
-    }
     @PostMapping("")
     public DockerResponseDto createVolume(@RequestBody VolumeRequestDto volumeRequestDto){
         return volumeService.createVolume(volumeRequestDto.getVolumeId());

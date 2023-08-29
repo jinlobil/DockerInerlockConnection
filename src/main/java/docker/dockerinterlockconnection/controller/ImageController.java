@@ -17,10 +17,7 @@ public class ImageController {
     public DockerResponseDto getImageList(){
         return this.imageService.getLocalImageList();
     }
-    @GetMapping("/local/{imageId}")
-    public DockerResponseDto getContainerInspect(@PathVariable(value = "imageId") String imageId){
-        return this.imageService.getLocalImageInspect(imageId);
-    }
+
     @PostMapping("/local")
     public DockerResponseDto localImagePull(@RequestBody ImageRequestDto imageRequestDto){
         return this.imageService.localImagePull(imageRequestDto);

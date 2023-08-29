@@ -18,10 +18,7 @@ public class ContainerController {
     public DockerResponseDto getContainerList(){
        return containerService.getContainerList();
     }
-    @GetMapping("/{containerId}")
-    public DockerResponseDto getContainerInspect(@PathVariable(value = "containerId") String containerId){
-        return containerService.getContainerInspect(containerId);
-    }
+
     @PostMapping ("")
     public DockerResponseDto createContainer(@RequestBody ContainerRequestDto containerData){
         return containerService.createContainer(containerData);

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Data
 public class SystemInfoResponseDto {
-    private Integer dockerId;
+    private String dockerId;
 
     private Integer containerCount;
     private Integer imageCount;

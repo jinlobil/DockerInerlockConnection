@@ -40,28 +40,6 @@ public class ImageService {
         return new DockerResponseDto(true,"Image inquiry completed",ImageCacheData);
     }
 
-    public DockerResponseDto getLocalImageInspect(String imageId){
-        if (!dockerService.idValidationCheck(imageId)){
-            return new DockerResponseDto(false, "imageId is invalid", null);
-        }
-        String cmd = "docker image inspect " + imageId + " --format json";
-        CommandExecuteResponse response = dockerCommandUtil.execute(cmd);
-        if (response.isSuccess()) {
-            List<ImageInspectDto>  inspectDtoList = null;
-            try {
-                inspectDtoList = objectMapper.readValue(response.getData(), new TypeReference<List<ImageInspectDto>>() {
-
-                });
-            } catch (JsonProcessingException e) {
-                log.error("ImageService_getLocalImageInspect Json Parsing Error {}", e);
-            }
-            if (inspectDtoList.size() == 0) {
-                return new DockerResponseDto(false, "Image inquiry failed", null);
-            }
-            return new DockerResponseDto(true,"Image inquiry completed", inspectDtoList.get(0));
-        }
-        return new DockerResponseDto(false, "Image inquiry failed", null);
-    }
 
     public DockerResponseDto localImagePull(ImageRequestDto imageData) {
         if (imageData == null || imageData.getImageName() == null) {

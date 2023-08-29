@@ -23,7 +23,6 @@ import java.util.List;
 public class VolumeService {
     private final DockerCacheDataService dockerCacheDataService = DockerCacheDataService.getDockerCacheDataService();
     private final DockerService dockerService;
-    private final ContainerService containerService;
     private final DockerCollectorJob dockerCollectorJob;
     private final DockerCommandUtil dockerCommandUtil = new DockerCommandUtil();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -38,31 +37,6 @@ public class VolumeService {
         return new DockerResponseDto(true, "Volume inquiry completed", volumeCacheData);
     }
 
-    public DockerResponseDto getVolumeInspect(String volumeId) {
-        if (!dockerService.idValidationCheck(volumeId)) {
-            return new DockerResponseDto(false, "volumeId is invalid", null);
-        }
-        if (volumeId == null) {
-            return new DockerResponseDto(false, "volumeId is null", null);
-        }
-        CommandExecuteResponse response = dockerCommandUtil.execute("docker volume inspect " + volumeId + " --format json");
-
-        if (response.isSuccess()) {
-            List<VolumeInspectDto> inspectDtoList = null;
-            try {
-                inspectDtoList = this.objectMapper.readValue(response.getData(), new TypeReference<List<VolumeInspectDto>>() {
-                });
-            } catch (JsonProcessingException e) {
-                log.error("VolumeService_getVolumeInspect Json Parsing Error {}", e);
-            }
-            if (inspectDtoList.size() == 0) {
-                return new DockerResponseDto(false, "Volume inquiry failed", null);
-            }
-            inspectDtoList.get(0).setUseContainerNames(getVolumeUseContainerName(inspectDtoList.get(0).getVolumeName()));
-            return new DockerResponseDto(true, "Volume inquiry completed", inspectDtoList.get(0));
-        }
-        return new DockerResponseDto(false, "Volume inquiry failed", null);
-    }
 
     public DockerResponseDto createVolume(String volumeId) {
         StringBuilder cmd = new StringBuilder();
@@ -101,21 +75,4 @@ public class VolumeService {
         return dockerResponseDto;
     }
 
-    private List<String> getVolumeUseContainerName(String volumeId) {
-        List<String> containerNameList = new ArrayList<>();
-        for (String containerId : containerService.getContainerIdList()) {
-            DockerResponseDto response = containerService.getContainerInspect(containerId);
-            if (response.isSuccess()) {
-                ContainerInspectDto containerInspectDto = (ContainerInspectDto) response.getData();
-                for (ContainerMountsDto mount : containerInspectDto.getMounts()) {
-                    String mountName = mount.getName();
-                    if (mountName != null && mountName.equalsIgnoreCase(volumeId)) {
-                        containerNameList.add(containerInspectDto.getName());
-                        break; // 이미 찾았으므로 루프 종료
-                    }
-                }
-            }
-        }
-        return containerNameList;
-    }
 }

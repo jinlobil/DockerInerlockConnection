@@ -10,7 +10,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_EMPTY) // 빈 문자열 또는 null인 경우 무시
 public class SystemInfoDto {
     @JsonProperty("ID")
-    private Integer dockerId;
+    private String dockerId;
 
     @JsonProperty("Containers")
     private Integer containerCount;

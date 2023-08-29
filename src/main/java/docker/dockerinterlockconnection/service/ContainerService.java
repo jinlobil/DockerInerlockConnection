@@ -37,30 +37,6 @@ public class ContainerService {
         return new DockerResponseDto(true,"Container inquiry completed",containerCacheData);
     }
 
-    public DockerResponseDto getContainerInspect(String containerId){
-        if (!dockerService.idValidationCheck(containerId)) {
-            return new DockerResponseDto(false, "ContainerId is invalid", null);
-        }
-        if (containerId == null){
-            return new DockerResponseDto(false, "ContainerId is null", null);
-        }
-        CommandExecuteResponse response = dockerCommandUtil.execute("docker container inspect " + containerId + " --format json");
-
-        if (response.isSuccess()){
-            List<ContainerInspectDto> inspectDtoList = null;
-            try {
-                inspectDtoList = this.objectMapper.readValue(response.getData(), new TypeReference<List<ContainerInspectDto>>() {
-                });
-            } catch (JsonProcessingException e) {
-                log.error("ContainerService_getContainerInspect Json Parsing Error {}", e);
-            }
-            if (inspectDtoList.size() == 0) {
-                return new DockerResponseDto(false, "Container inquiry failed", null);
-            }
-            return new DockerResponseDto(true,"Container inquiry completed", inspectDtoList.get(0));
-        }
-        return new DockerResponseDto(false,"Container inquiry failed",null);
-    }
 
     public DockerResponseDto createContainer(ContainerRequestDto containerData){
         if (containerData.getContainerName() == null){
@@ -163,13 +139,5 @@ public class ContainerService {
         return sb;
     }
 
-    public List<String> getContainerIdList() {
-        CommandExecuteResponse result = dockerCommandUtil.execute("docker ps -a | awk '{ print $1 }'");
-        if (result.isSuccess()) {
-            String[] array= result.getData().replace(")","").replace("CONTAINER","").trim().split("\\n");
-            return Arrays.stream(array)
-                    .collect(Collectors.toList());
-        }
-        return null;
-    }
+
 }
