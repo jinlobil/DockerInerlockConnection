@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @Slf4j
 @RequestMapping("/docker/image")
@@ -20,11 +22,19 @@ public class ImageController {
 
     @PostMapping("/local")
     public DockerResponseDto localImagePull(@RequestBody ImageRequestDto imageRequestDto){
-        return this.imageService.localImagePull(imageRequestDto);
+        CompletableFuture.supplyAsync(() -> {
+            this.imageService.localImagePull(imageRequestDto);
+            return null;
+        });
+        return new DockerResponseDto(true, "Image pull request completed", null);
     }
     @DeleteMapping("/local/{imageId}")
     public DockerResponseDto deleteImage(@PathVariable(value = "imageId") String imageId){
-        return this.imageService.deleteImage(imageId);
+        CompletableFuture.supplyAsync(() -> {
+            this.imageService.deleteImage(imageId);
+            return null;
+        });
+        return new DockerResponseDto(true, "Image deleted request completed", null);
     }
 
     @GetMapping("/hub/search/{search-word}")

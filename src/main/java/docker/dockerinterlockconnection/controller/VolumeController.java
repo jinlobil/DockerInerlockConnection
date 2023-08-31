@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @Slf4j
 @RequestMapping("/docker/volume")
@@ -21,11 +23,19 @@ public class VolumeController {
     }
     @PostMapping("")
     public DockerResponseDto createVolume(@RequestBody VolumeRequestDto volumeRequestDto){
-        return volumeService.createVolume(volumeRequestDto.getVolumeId());
+        CompletableFuture.supplyAsync(() -> {
+            this.volumeService.createVolume(volumeRequestDto.getVolumeId());
+            return null;
+        });
+        return new DockerResponseDto(true, "Volume created request completed", null);
     }
     @DeleteMapping("/{volumeId}")
     public DockerResponseDto deleteVolume(@PathVariable(value = "volumeId") String volumeId){
-        return volumeService.deleteVolume(volumeId);
+        CompletableFuture.supplyAsync(() -> {
+            this.volumeService.deleteVolume(volumeId);
+            return null;
+        });
+        return new DockerResponseDto(true, "Volume deleted request completed", null);
     }
 
 }

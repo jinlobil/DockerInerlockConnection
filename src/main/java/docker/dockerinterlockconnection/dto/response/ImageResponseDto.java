@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class ImageResponseDto {
-    private String containerCount;
+    private Integer containerCount;
     private String imageName;
     private String imageVersion;
     private ImageInspectResponseDto inspect;

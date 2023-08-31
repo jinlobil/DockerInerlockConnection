@@ -37,6 +37,37 @@ public class ContainerService {
         return new DockerResponseDto(true,"Container inquiry completed",containerCacheData);
     }
 
+    public DockerResponseDto statusControl(ContainerRequestDto containerData) {
+        if (containerData.getContainerId() == null) {
+            dockerService.notifyAlarm(false, "ContainerId is null", DockerWebSocketResponse.DataType.CONTAINER);
+            return new DockerResponseDto(false, "ContainerId is null", null);
+        }
+        if (containerData.getStatus() == null) {
+            dockerService.notifyAlarm(false, "Status is null", DockerWebSocketResponse.DataType.CONTAINER);
+            return new DockerResponseDto(false, "Status is null", null);
+        }
+        String status = null;
+        switch (containerData.getStatus()) {
+            case 0: status = "start";
+                break;
+            case 1: status = "stop";
+                break;
+            case 2:status= "restart";
+                break;
+        }
+
+        CommandExecuteResponse response = dockerCommandUtil.execute("docker " + status + " " + containerData.getContainerId());
+        DockerResponseDto dockerResponseDto = null;
+        if (response.isSuccess()){
+            dockerCollectorJob.triggerCollect();
+            dockerResponseDto = new DockerResponseDto(true, "Container status completed", response.getData());
+
+        }else {
+            dockerResponseDto = new DockerResponseDto(false, response.getData(), null);
+        }
+        dockerService.notifyTotal(dockerResponseDto, DockerWebSocketResponse.DataType.CONTAINER);
+        return dockerResponseDto;
+    }
 
     public DockerResponseDto createContainer(ContainerRequestDto containerData){
         if (containerData.getContainerName() == null){
@@ -136,7 +167,7 @@ public class ContainerService {
                 sb.append(" ").append(keyAndValue.getKey()).append("=").append(keyAndValue.getValue());
             }
         }
-        return sb;
+        return sb.append(" ").append(containerData.getImageId());
     }
 
 

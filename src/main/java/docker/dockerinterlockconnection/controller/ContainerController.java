@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @Slf4j
 @RequestMapping("/docker/container")
@@ -21,10 +23,26 @@ public class ContainerController {
 
     @PostMapping ("")
     public DockerResponseDto createContainer(@RequestBody ContainerRequestDto containerData){
-        return containerService.createContainer(containerData);
+        CompletableFuture.supplyAsync(() -> {
+            this.containerService.createContainer(containerData);
+            return null;
+        });
+        return new DockerResponseDto(true, "Container created request completed", null);
+    }
+    @PutMapping ("/status")
+    public DockerResponseDto statusControl(@RequestBody ContainerRequestDto containerData){
+        CompletableFuture.supplyAsync(() -> {
+            this.containerService.statusControl(containerData);
+            return null;
+        });
+        return new DockerResponseDto(true, "Container status request completed", null);
     }
     @DeleteMapping ("/{containerId}")
     public DockerResponseDto deleteContainer(@PathVariable(value = "containerId") String containerId){
-        return containerService.deleteContainer(containerId);
+        CompletableFuture.supplyAsync(() -> {
+            this.containerService.deleteContainer(containerId);
+            return null;
+        });
+        return new DockerResponseDto(true, "Container deleted request completed", null);
     }
 }

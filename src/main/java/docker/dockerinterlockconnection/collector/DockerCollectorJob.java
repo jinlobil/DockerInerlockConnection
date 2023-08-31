@@ -5,6 +5,7 @@ import docker.dockerinterlockconnection.dto.response.*;
 import docker.dockerinterlockconnection.service.DockerCacheDataService;
 import docker.dockerinterlockconnection.service.DockerService;
 import docker.dockerinterlockconnection.service.SystemService;
+import docker.dockerinterlockconnection.websocket.DockerWebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class DockerCollectorJob {
     private final DockerCacheDataService dockerCacheDataService = DockerCacheDataService.getDockerCacheDataService();
+    private final DockerWebSocketHandler dockerWebSocketHandler;
     private final SystemService systemService;
 
 
@@ -135,7 +137,7 @@ public class DockerCollectorJob {
 
                 responseDto.setImageName(imageData.getImageName() != null ? imageData.getImageName() : null);
                 responseDto.setImageVersion(imageData.getImageVersion() != null ? imageData.getImageVersion() : null);
-                responseDto.setContainerCount(imageData.getUsedContainerCount() != null ? imageData.getUsedContainerCount() : null);
+                responseDto.setContainerCount(imageData.getUsedContainerCount() != null ? Integer.valueOf(imageData.getUsedContainerCount()) : null);
 
                 imageResponseList.add(responseDto);
             }
@@ -214,6 +216,7 @@ public class DockerCollectorJob {
             if (beforeSystemInfo != null) {
                 boolean difference = SystemInfoResponseDto.isDifferent(beforeSystemInfo, infoResponseData);
                 if (difference) {
+                    dockerWebSocketHandler.broadcast(true, "System information fluctuation", infoResponseData, DockerWebSocketResponse.RequestType.INFO, DockerWebSocketResponse.DataType.SYSTEM);
 //                    this.dockerService.notifyTotal(new DockerResponseDto(true, "System information fluctuation", null), DockerWebSocketResponse.DataType.SYSTEM);
                 }
             }
