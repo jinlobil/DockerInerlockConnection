@@ -45,7 +45,7 @@
     <td align="center"><b><a href="https://github.com/jinlobil">황현준</a></b></td>
   </tr>
   <tr>
-     <td align="center"><a href="[https://github.com/horang-e](https://avatars.githubusercontent.com/u/105104335?v=4)"><img src="https://ifh.cc/g/0TgKO9.png" width="100px" /></a></td>
+     <td align="center"><a href="https://github.com/horang-e"><img src="https://avatars.githubusercontent.com/u/105104335?v=4" width="100px" /></a></td>
      <td align="center"><a href="https://github.com/jinlobil"><img src="https://avatars.githubusercontent.com/u/104722681?v=4" width="100px" /></a></td>
     
   </tr>
