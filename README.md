@@ -67,7 +67,7 @@
 **JDK**: jdk 1.8
 
 
-**Springboot**: 2.7.15
+**Framework**: Springboot 2.7.15
 
 
 **IDE**: IntelliJ IDEA 2023.2
