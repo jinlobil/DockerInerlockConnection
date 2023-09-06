@@ -25,8 +25,6 @@ repositories {
 
 dependencies {
     //Spring
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     compileOnly 'org.projectlombok:lombok'
@@ -34,6 +32,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    //db
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    runtimeOnly 'com.mysql:mysql-connector-j'
+//    implementation 'com.mysql:mysql-connector-j'
+    implementation 'com.mysql:mysql-connector-j:8.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'com.h2database:h2'
     //Jackson
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.4'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'

@@ -2,6 +2,8 @@ package docker.dockerinterlockconnection.dto.response;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Data

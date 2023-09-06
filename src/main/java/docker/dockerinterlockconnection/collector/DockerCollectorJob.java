@@ -3,7 +3,6 @@ package docker.dockerinterlockconnection.collector;
 import docker.dockerinterlockconnection.dto.*;
 import docker.dockerinterlockconnection.dto.response.*;
 import docker.dockerinterlockconnection.service.DockerCacheDataService;
-import docker.dockerinterlockconnection.service.DockerService;
 import docker.dockerinterlockconnection.service.SystemService;
 import docker.dockerinterlockconnection.websocket.DockerWebSocketHandler;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
