@@ -104,4 +104,10 @@
 <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fdw9rpF%2FbtstkqWLhMJ%2FkOjiJmYEQutkOox2jCRbwK%2Fimg.png" width="1000px" />
 
 ## 📱 FlowChart
+
+### 전체 흐름
 <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fby8E90%2Fbtsth6EiO7i%2FMxsxHKNcvQ0JxgcMHYbpfK%2Fimg.png" width="1000px" />
+
+
+### API 흐름
+<img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbaHlb6%2Fbtss900dsjk%2FkbtDsrbugqWfhKfB6GGAJ1%2Fimg.png" width="1000px" />
