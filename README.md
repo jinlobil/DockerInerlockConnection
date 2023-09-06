@@ -57,3 +57,42 @@
 
 <br/>
 <br/>
+
+###  개발 환경
+
+
+**Java**: java 8
+
+
+**JDK**: jdk 1.8
+
+
+**Springboot**: 2.7.15
+
+
+**IDE**: IntelliJ IDEA 2023.2
+
+
+**Database**: MySQL 8.1.0
+
+
+#### 연동 환경
+
+
+**Docker**: 24.05
+
+
+#### 가상머신 환경
+
+
+**OS**: Ubuntu 22.04.2 LTS
+
+
+**Storage**: 8GB
+
+
+**Mem**: 965MB
+
+
+## ⚒️ ERD
+<img src="https://ifh.cc/g/O6gKwJ.png" width="1000px" />
