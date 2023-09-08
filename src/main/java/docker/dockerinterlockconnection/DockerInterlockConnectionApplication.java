@@ -25,7 +25,6 @@ public class DockerInterlockConnectionApplication {
         } else {
             //docker 인증 실패
             log.error("Authentication failed. Exiting... docker_version_auth = {}", false);
-
             System.exit(1); // 프로세스 종료
         }
     }
